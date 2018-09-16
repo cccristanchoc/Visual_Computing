@@ -1,6 +1,6 @@
 PImage prs;
 PImage zmb;
-
+int vsbl;
 void setup(){
   size(300, 390);
   prs= loadImage("person.png");
@@ -11,7 +11,13 @@ void setup(){
 
 void draw(){
   background(255);
-  
+  if (mousePressed != true) {
+    Pasillo();
+  }
+  keyPressed(zmb, prs);
+}
+
+void Pasillo(){
   stroke(0);
   //point(200, 240);
   //point(245, 240);
@@ -45,7 +51,6 @@ void draw(){
   line(83, 287, 277, 287);
   line(130, 268, 265, 268);
   line(166, 253, 255, 253);
-  keyPressed(zmb, prs);
 }
 
 void keyPressed(PImage zmb, PImage prs) {
