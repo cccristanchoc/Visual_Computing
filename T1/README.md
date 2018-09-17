@@ -32,6 +32,10 @@ Complete la tabla:
 |         |           |            |                                    |                             |
 
 2. Describa brevememente las referencias estudiadas y los posibles temas en los que le gustaría profundizar:
+  * Hallway_Illusion es una ilusión muy interesante ya que se puede evidenciar como nuestro sistema visual siempre intenta darle un sentido a lo que vemos, puesto que, al tener una imagen del mismo tamaño pero superpuesto sobre un pasillo con una supuesta profundidad nos da la ilusión de que una es mas grande que la otra.
+  * upside_down usa como principio la decodificación de la expresión facial que usa nuestro cerebro, esta funciona mucho mejor en la orientación en la que siempre vemos los rostros, es decir, en posición vertical.
+  * Moon_planet usa el mismo principio de la ilusión de la [bailarina](https://www.michaelbach.de/ot/sze-silhouette/KayaharaOriginal.gif), en donde, todas las siluetas son ambiguas. Es decir, cualquier imagen plana que intente generar una imagen en 3D, que nuestro cerebro procesa, puede tener una rotación a la derecha o izquierda, dependiendo de la perspectiva como esta sea observada.
+   * lvstrp esta ilusión se basa en que a partir de unas pocas fases de movimiento, se crea una aparente percepción de movimiento continuo, esto se conoce como [Fenómeno φ ó φ-phenomenon](https://es.wikipedia.org/wiki/Fen%C3%B3meno_phi).
 
 ## Entrega
 
