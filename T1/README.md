@@ -26,9 +26,9 @@ Complete la tabla:
 |---------|-----------|------------|------------------------------------|-----------------------------|
 | Hallway_Illusion | Size Constancy |  [Shepard’s “Terror Subterra"](https://www.michaelbach.de/ot/sze-shepardTerrors)  |   mousePressed & keys: 'r'+'t'+'y'+'u'   |          |
 | upside_down  | Specialties with faces  |   [Thompson’s “Thatcher Illusion”](https://www.michaelbach.de/ot/fcs-thompsonThatcher)   |  mouseClicked   |                             |
-| lvstrp | Motion | [Kinegram (“Scanimation”)](https://www.michaelbach.de/ot/mot-scanimation) | Move mouse & mouseClicked |                             |
 | moon_planet | Silhouette Illusion | [Silhouette Illusion](https://www.michaelbach.de/ot/sze-silhouette) | mouseClicked & keyPressed |                             |
-|         |           |            |                                    |                             |
+| lvstrp | Motion (Moiré Patterns) | [Kinegram (“Scanimation”)](https://www.michaelbach.de/ot/mot-scanimation) | Move mouse & mouseClicked |                             |
+| Bailarina | Ambiguous Illusion + Moiré Patterns | [Silhouette Illusion](https://www.michaelbach.de/ot/sze-silhouette) &  [“Scanimation”](https://www.michaelbach.de/ot/mot-scanimation) | mouse move |       |
 |         |           |            |                                    |                             |
 
 2. Describa brevememente las referencias estudiadas y los posibles temas en los que le gustaría profundizar:
@@ -36,6 +36,7 @@ Complete la tabla:
   * upside_down usa como principio la decodificación de la expresión facial que usa nuestro cerebro, esta funciona mucho mejor en la orientación en la que siempre vemos los rostros, es decir, en posición vertical.
   * Moon_planet usa el mismo principio de la ilusión de la [bailarina](https://www.michaelbach.de/ot/sze-silhouette/KayaharaOriginal.gif), en donde, todas las siluetas son ambiguas. Es decir, cualquier imagen plana que intente generar una imagen en 3D, que nuestro cerebro procesa, puede tener una rotación a la derecha o izquierda, dependiendo de la perspectiva como esta sea observada.
    * lvstrp esta ilusión se basa en que a partir de unas pocas fases de movimiento, se crea una aparente percepción de movimiento continuo, esto se conoce como [Fenómeno φ ó φ-phenomenon](https://es.wikipedia.org/wiki/Fen%C3%B3meno_phi).
+   * Bailarina en esta ilusión se realizo la combinación de "el efecto Moiré" y el movimiento ambiguo de la silueta de la bailarina, en ella observamos que conserva su ambigüedad pero esta se ve forzada según el movimiento que se realice de la rejilla.
 
 ## Entrega
 
