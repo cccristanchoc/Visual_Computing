@@ -32,12 +32,11 @@ Complete la tabla:
 | Integrante | github nick |
 |------------|-------------|
 | David Andres Hoyos R           |   wolfstain          |
-| Luis Enrique Alfonso           |   luealfonsoru          |
 | Cristian Camilo Cristancho C          |    cccristanchoc         |
 
-## Discusión
+## Discusión: (Describa los resultados obtenidos. En el caso de anti-aliasing describir las técnicas exploradas, citando las referencias.)
+Para el taller se crearon 2 funciones edgeValida() y edge, las cuales reciben los valores de los vértices del triangulo y el punto a evaluar (centro del píxel), y en ellas se realizar el calculo por coordenadas baricéntricas si el punto esta dentro del triangulo formado por sus vértices, ademas de calcular un valor de color en RGB según la distancia del punto con respecto a sus vértices.
 
-Describa los resultados obtenidos. En el caso de anti-aliasing describir las técnicas exploradas, citando las referencias.
 
 ## Entrega
 
