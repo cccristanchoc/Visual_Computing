@@ -34,8 +34,11 @@ Complete la tabla:
 | David Andres Hoyos R           |   wolfstain          |
 | Cristian Camilo Cristancho C          |    cccristanchoc         |
 
-## Discusión: (Describa los resultados obtenidos. En el caso de anti-aliasing describir las técnicas exploradas, citando las referencias.)
+## Discusión: 
+
 Para el taller se crearon 2 funciones edgeValida() y edge, las cuales reciben los valores de los vértices del triangulo y el punto a evaluar (centro del píxel), y en ellas se realizar el calculo por coordenadas baricéntricas si el punto esta dentro del triangulo formado por sus vértices, ademas de calcular un valor de color en RGB según la distancia del punto con respecto a sus vértices.
+Se aplico el [algoritmo de anti-aliasing](https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-practical-implementation) usado en la pagina guia, aplicandose a las aristas del triangulo y generando un sombreado mas suave a los puntos de las subdivisiones cercanas a la linea.
+
 
 
 ## Entrega
