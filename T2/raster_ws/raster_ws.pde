@@ -11,7 +11,6 @@ Vector v1, v2, v3;
 // timing
 TimingTask spinningTask;
 boolean yDirection;
-
 // scaling is a power of 2
 int n = 4;
 
@@ -19,15 +18,16 @@ int n = 4;
 boolean triangleHint = true;
 boolean gridHint = true;
 boolean debug = true;
+boolean deep = true;
 
 // 3. Use FX2D, JAVA2D, P2D or P3D
 String renderer = P3D;
 
 Point punto;
 
-float[] colR = {1, 0, 0};
-float[] colG = {0, 1, 0};
-float[] colB = {0, 0, 1};
+float[] colR = {1,0,0};
+float[] colG = {0,1,0};
+float[] colB = {0,0,1};
 
 
 void setup() {
@@ -51,7 +51,7 @@ void setup() {
   // world system.
   spinningTask = new TimingTask() {
     @Override
-      public void execute() {
+    public void execute() {
       scene.eye().orbit(scene.is2D() ? new Vector(0, 0, 1) :
         yDirection ? new Vector(0, 1, 0) : new Vector(1, 0, 0), PI / 100);
     }
@@ -79,33 +79,44 @@ void draw() {
   popStyle();
   popMatrix();
 }
-//int cont=0;
+
 float escena[][];
 // Implement this function to rasterize the triangle.
 // Coordinates are given in the frame system which has a dimension of 2^n
 void triangleRaster() {
   // frame.location converts points from world to frame
   // here we convert v1 to illustrate the idea
-  //println(edgeValida(v1,v2,v3, 0, 0));
+  
   noStroke();
   rectMode(CENTER);
   escena = new float[(int)pow(2, n)][(int)pow(2, n)];
-  float[] rgb=new float[0];
-
+  float[] rgb = new float[0];
+  float z1 = (1/scene.screenLocation(v1).z());
+  float z2 = (1/scene.screenLocation(v2).z());
+  float z3 = (1/scene.screenLocation(v3).z());
+  
   //((2^n)/2)+0.5 formula del centro del pixel
-  for (float i=(0.5-pow(2, n)); i<=(0.5+pow(2, n)); i++) {
-    for (float j=(0.5-pow(2, n)); j<=(0.5+pow(2, n)); j++) {
-
-      //rect(-3.5,-3.5,1,1);
-      //println(scene.screenLocation(v1).x());
-
-      if (edgeValida(v1, v2, v3, i, j))
-      {
-        rgb = edge(v1, v2, v3, i, j);
+  for(float i=(0.5-pow(2,n-1)); i<=(0.5+pow(2,n-1)); i++){
+    for(float j=(0.5-pow(2,n-1)); j<=(0.5+pow(2,n-1)); j++){
+      
+      //rect(i,j,0.5,0.5);
+      //float test = (1/scene.screenLocation(v1).z());
+      //float test2 = (1/scene.eye().location(v1).z())*-1000;
+      //println("v1: " + test);
+      //println("v_: " + test2);
+      
+      if(edgeValida(v1,v2,v3, i, j)){
+        rgb = edge(v1,v2,v3,i,j);
+        if(deep){
+          float[] lam = edgeFunc(v1,v2,v3,i,j);
+          float z = 1/(lam[0] * z1 + lam[1] * z2 + lam[2] * z3); 
+          //println("z: " + z);
+          rgb[0] *= z; rgb[1] *= z; rgb[2] *= z; 
+        }
         //println(rgb);
         pushStyle();
-        fill(rgb[0], rgb[1], rgb[2]);
-        rect(i, j, 1, 1);
+        fill(rgb[0]*255, rgb[1]*255, rgb[2]*255);
+        rect(i,j,1,1);
         popStyle();
       } else {
         int sum=0;
@@ -118,15 +129,12 @@ void triangleRaster() {
         Vector D= new Vector(i+0.5, j+0.5);
         int b=0;
 
-        if (i==-3.5&&j==-3.5) {
-
+        if (i==-3.5&&j==-3.5) { 
           line(i-0.5, j-0.5, 10, 10);          
           //ellipse(i-0.5,j-0.5,0.1,0.1);
           //ellipse(i-0.5,j+0.5,0.1,0.1);          
           //println(doIntersect(A,C,frame.location(v1),frame.location(v2)));
-        }
-
-
+        } 
         if (doIntersect(A, B, frame.location(v1), frame.location(v2))||doIntersect(B, D, frame.location(v1), frame.location(v2))||doIntersect(C, D, frame.location(v1), frame.location(v2))||doIntersect(A, C, frame.location(v1), frame.location(v2))||
           doIntersect(A, B, frame.location(v2), frame.location(v3))||doIntersect(B, D, frame.location(v2), frame.location(v3))||doIntersect(C, D, frame.location(v2), frame.location(v3))||doIntersect(A, C, frame.location(v2), frame.location(v3))||
           doIntersect(A, B, frame.location(v1), frame.location(v3))||doIntersect(B, D, frame.location(v1), frame.location(v3))||doIntersect(C, D, frame.location(v1), frame.location(v3))||doIntersect(A, C, frame.location(v1), frame.location(v3))        
@@ -161,11 +169,7 @@ void triangleRaster() {
             popStyle();
           }
         }
-
-
-        /* 
-         
-         */
+        //End else
       }
     }
   }
@@ -183,6 +187,28 @@ void triangleRaster() {
     point(round(frame.location(v3).x()), round(frame.location(v3).y()));
     popStyle();
   }
+}
+
+float[] edgeFunc(Vector v1, Vector v2, Vector v3, float pntX, float pntY){
+  float A = ((pntX - frame.location(v1).x()) * (frame.location(v2).y() - frame.location(v1).y()) - (pntY - frame.location(v1).y()) * (frame.location(v2).x() - frame.location(v1).x()));
+  float B = ((pntX - frame.location(v2).x()) * (frame.location(v3).y() - frame.location(v2).y()) - (pntY - frame.location(v2).y()) * (frame.location(v3).x() - frame.location(v2).x()));
+  float C = ((pntX - frame.location(v3).x()) * (frame.location(v1).y() - frame.location(v3).y()) - (pntY - frame.location(v3).y()) * (frame.location(v1).x() - frame.location(v3).x()));
+  float area = ((frame.location(v3).x() - frame.location(v1).x()) * (frame.location(v2).y() - frame.location(v1).y()) - (frame.location(v3).y() - frame.location(v1).y()) * (frame.location(v2).x() - frame.location(v1).x()));
+
+  //println(area);
+  
+  if(A >= 0 && B >= 0 && C >= 0 ||A <= 0 && B <= 0 && C <= 0 ){
+    //println("Inside");
+    float alph = (A/area);
+    float bet = (B/area);
+    float gam = (C/area);
+    
+    float[] res = {alph, bet, gam};
+    return res;
+  }
+  float[] res = {0, 0, 0};
+  return res;
+  
 }
 
 boolean onSegment(Vector p, Vector q, Vector r) {
@@ -280,7 +306,7 @@ float[] edge(Vector v1, Vector v2, Vector v3, float pntX, float pntY) {
     float r = (alph * colR[0]) + (bet * colG[0]) + (gam * colB[0]); 
     float g = (alph * colR[1]) + (bet * colG[1]) + (gam * colB[1]);
     float b = (alph * colR[2]) + (bet * colG[2]) + (gam * colB[2]);
-    float[] result = {r*255, g*255, b*255};
+    float[] result = {r, g, b};
     return result;
   } else { 
     //println(area);
@@ -293,10 +319,7 @@ float[] edge(Vector v1, Vector v2, Vector v3, float pntX, float pntY) {
 void randomizeTriangle() {
   int low = -width/2;
   int high = width/2;
-  //v1 = new Vector( 312.51947, -208.95105);
-  //v2 = new Vector( -314.87387, -138.58603);
-  //v2 = new Vector( 0, 0);
-  //v3 = new Vector( 281.13574, -137.17499);
+
   v1 = new Vector(random(low, high), random(low, high));
   v2 = new Vector(random(low, high), random(low, high));
   v3 = new Vector(random(low, high), random(low, high));
@@ -346,4 +369,6 @@ void keyPressed() {
       spinningTask.run(20);
   if (key == 'y')
     yDirection = !yDirection;
+  if (key == 'z')
+    deep = !deep;
 }
