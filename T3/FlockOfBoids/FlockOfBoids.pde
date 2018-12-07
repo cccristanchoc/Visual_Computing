@@ -27,6 +27,7 @@ import frames.core.*;
 import frames.processing.*;
 
 Scene scene;
+Interpolator interpolator;
 //flock bounding box
 int flockWidth = 640;
 int flockHeight = 640;
@@ -51,6 +52,7 @@ void setup() {
   flock = new ArrayList();
   for (int i = 0; i < initBoidNum; i++)
     flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2)));
+  interpolator =  new Interpolator(scene);
 }
 
 void draw() {
@@ -59,6 +61,13 @@ void draw() {
   directionalLight(255, 255, 255, 0, 1, -100);
   walls();
   scene.traverse();
+
+  pushStyle();
+  strokeWeight(3);
+  stroke(255,0,0);
+  scene.drawPath(interpolator);
+  popStyle();
+
   // uncomment to asynchronously update boid avatar. See mouseClicked()
   // updateAvatar(scene.trackedFrame("mouseClicked"));
 }
@@ -170,6 +179,25 @@ void keyPressed() {
   case 'v':
     avoidWalls = !avoidWalls;
     break;
+  
+  case '+':
+    int index = int(random(0,initBoidNum));
+    interpolator.addKeyFrame(flock.get(index).frame);
+    break;
+  case '-':
+    if(interpolator.keyFrames().isEmpty()){
+      println(" ¡No hay puntos para eliminar! ");
+      break;
+    }else{
+      //interpolator.purge();
+      println(interpolator.keyFrames());
+      println(interpolator.keyFrame(0) + " pos: 0");
+      interpolator.removeKeyFrame(0);
+      println(interpolator.keyFrames());
+    }
+    
+    break;
+  
   case ' ':
     if (scene.eye().reference() != null)
       resetEye();
