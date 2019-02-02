@@ -1,5 +1,6 @@
 class Boid {
   public Frame frame;
+  PShape boidPs;
   // fields
   Vector position, velocity, acceleration, alignment, cohesion, separation; // position, velocity, and acceleration in
   // a vector datatype
@@ -9,18 +10,87 @@ class Boid {
   float sc = 3; // scale factor for the render of the boid
   float flap = 0;
   float t = 0;
+  float[] v0={3 * sc, 0, 0};
+  float[] v1={-3 * sc, 2 * sc, 0};
+  float[] v2={-3 * sc, -2 * sc, 0};
+  float[] v3={-3 * sc, 0, 2 * sc};
+  
+  ArrayList<ArrayList<float[]>> vectorList = new ArrayList<ArrayList<float[]>>();
+  ArrayList<float[]> vectors = new ArrayList<float[]>();
+  ArrayList<float[]> v0list = new ArrayList<float[]>();
+  ArrayList<float[]> v1list = new ArrayList<float[]>();
+  ArrayList<float[]> v2list = new ArrayList<float[]>();
+  
+    //vertex(v0[0],v0[1],v0[2]);      V0
+    //vertex(-3 * sc, 2 * sc, 0);     V1
+    //vertex(-3 * sc, -2 * sc, 0);    V2
+ 
+    //vertex(3 * sc, 0, 0);           V0
+    //vertex(-3 * sc, 2 * sc, 0);     V1
+    //vertex(-3 * sc, 0, 2 * sc);     V3       
 
-  Boid(Vector inPos) {
+    //vertex(3 * sc, 0, 0);           V0
+    //vertex(-3 * sc, 0, 2 * sc);     V3
+    //vertex(-3 * sc, -2 * sc, 0);    V2
+
+    //vertex(-3 * sc, 0, 2 * sc);     V3
+    //vertex(-3 * sc, 2 * sc, 0);     V1
+    //vertex(-3 * sc, -2 * sc, 0);    V2
+    
+ Boid(Vector inPos) {
+    boidPs = createShape(); 
+   
+    vectors.add(v0);
+    vectors.add(v1);
+    vectors.add(v2);
+    vectors.add(v3);
+    v0list.add(v1);
+    v0list.add(v2);
+    v0list.add(v3);
+    v1list.add(v2);
+    v1list.add(v3);
+    v2list.add(v3);
+    vectorList.add(v0list);
+    vectorList.add(v1list);
+    vectorList.add(v2list);
+    
+    boidPs.beginShape(LINES);    
+    boidPs.strokeWeight(2);
+    boidPs.stroke(color(40, 255, 40));
+    boidPs.fill(color(0, 255, 0, 125));
+
+    // highlight boids under the mouse
+    if (scene.trackedFrame("mouseMoved") == frame) {
+      boidPs.stroke(color(0, 0, 255));
+      boidPs.fill(color(0, 0, 255));
+    }
+
+    // highlight avatar
+    if (frame ==  avatar) {
+      boidPs.stroke(color(255, 0, 0));
+      boidPs.fill(color(255, 0, 0));
+    }
+      
+      for(int i=0; i<vectors.size()-1;i++){
+         for(int y=0; y<vectorList.get(i).size();y++){
+           boidPs.vertex(vectors.get(i)[0],vectors.get(i)[1],vectors.get(i)[2]);
+           boidPs.vertex(vectorList.get(i).get(y)[0],vectorList.get(i).get(y)[1],vectorList.get(i).get(y)[2]);
+         }
+      }
+    boidPs.endShape();
+    
     position = new Vector();
     position.set(inPos);
     frame = new Frame(scene) {
       // Note that within visit() geometry is defined at the
       // frame local coordinate system.
       @Override
-      public void visit() {
+      public void visit() 
+      {
         if (animate)
           run(flock);
-        render();
+          //shape(boidPs);
+          //render();
       }
     };
     frame.setPosition(new Vector(position.x(), position.y(), position.z()));
@@ -130,15 +200,15 @@ class Boid {
       position.setZ(flockDepth);
   }
 
-  void render() {
+  void render() {  
     pushStyle();
-
-    // uncomment to draw boid axes
-    //scene.drawAxes(10);
-
+    
     strokeWeight(2);
     stroke(color(40, 255, 40));
     fill(color(0, 255, 0, 125));
+    
+    beginShape(LINES);    
+    
 
     // highlight boids under the mouse
     if (scene.trackedFrame("mouseMoved") == frame) {
@@ -151,80 +221,39 @@ class Boid {
       stroke(color(255, 0, 0));
       fill(color(255, 0, 0));
     }
+      
+      for(int i=0; i<vectors.size()-1;i++){
+         for(int y=0; y<vectorList.get(i).size();y++){
+           vertex(vectors.get(i)[0],vectors.get(i)[1],vectors.get(i)[2]);
+           vertex(vectorList.get(i).get(y)[0],vectorList.get(i).get(y)[1],vectorList.get(i).get(y)[2]);
+         }
+      }
+    endShape();
+    // uncomment to draw boid axes
+    //scene.drawAxes(10);
+
+   
 
     //draw boid
-    beginShape(TRIANGLES);
-    
-    if(one){
-      /*
-      vertex(3 * sc, 0, 0);
-      vertex(-3 * sc, 2 * sc, 0);
-      vertex(-3 * sc, -2 * sc, 0);
-  
-      vertex(3 * sc, 0, 0);
-      vertex(-3 * sc, 2 * sc, 0);
-      vertex(-3 * sc, 0, 2 * sc);
-  
-      vertex(3 * sc, 0, 0);
-      vertex(-3 * sc, 0, 2 * sc);
-      vertex(-3 * sc, -2 * sc, 0);
-  
-      vertex(-3 * sc, 0, 2 * sc);
-      vertex(-3 * sc, 2 * sc, 0);
-      vertex(-3 * sc, -2 * sc, 0);
-      */
-      vertex(2 * sc, 0, 2 * sc);     //  6, 0,6
-      vertex(0, 0, 3 * sc);          //  0, 0,9
-      vertex(0, sc, 2 * sc);         //  0, 3,6
-      
-      vertex(2 * sc, 0, 2 * sc);     //  6, 0,6
-      vertex(0, 0, 3 * sc);          //  0, 0,9
-      vertex(0, -sc, 2 * sc);        //  0,-3,6
-      
-      vertex(2 * sc, 0, 2 * sc);     //  6, 0,6
-      vertex(0, 0, sc);              //  0, 0,3
-      vertex(0, sc, 2 * sc);         //  0, 3,6
-      
-      vertex(2 * sc, 0, 2 * sc);     //  6, 0,6
-      vertex(0, 0, sc);              //  0, 0,3
-      vertex(0, -sc, 2 * sc);        //  0,-3,6 
-      
-      vertex(-5 * sc, 0, 2 * sc);    //-15, 0,0
-      vertex(0, 0, 3 * sc);          //  0, 0,9
-      vertex(0, sc, 2 * sc);         //  0, 3,6
-      
-      vertex(-5 * sc, 0, 2 * sc);    //-15, 0,0
-      vertex(0, 0, 3 * sc);          //  0, 0,9
-      vertex(0, -sc, 2 * sc);        //  0,-3,6
-      
-      vertex(-5 * sc, 0, 2 * sc);    //-15, 0,0
-      vertex(0, 0, sc);              //  0, 0,3
-      vertex(0, sc, 2 * sc);         //  0, 3,6
-      
-      vertex(-5 * sc, 0, 2 * sc);    //-15, 0,0
-      vertex(0, 0, sc);              //  0, 0,3
-      vertex(0, -sc, 2 * sc);        //  0,-3,6
-      
-    }
-    if(two){
-      vertex(3 * sc, 0, 0);          //  9, 0,0
-      vertex(-3 * sc, 0, 0);         // -9, 0,0
-      vertex(0, 3 * sc, sc);         //  0, 9,3
-      
-      vertex(3 * sc, 0, 0);          //  9, 0,0
-      vertex(-3 * sc, 0, 0);         // -9, 0,0
-      vertex(0, 3 * sc, 3 * sc);     //  0, 9,9
-      
-      vertex(3 * sc, 0, 0);          //  9, 0,0
-      vertex(-3 * sc, 0, 0);         // -9, 0,0
-      vertex(0, -3 * sc, sc);        //  0, 9,3
-      
-      vertex(3 * sc, 0, 0);          //  9, 0,0
-      vertex(-3 * sc, 0, 0);         // -9, 0,0
-      vertex(0, -3 * sc, 3 * sc);    //  0,-9,9
-    }
-    endShape();
+    //
+    //beginShape(TRIANGLES);
+    //vertex(v0[0],v0[1],v0[2]);
+    //vertex(-3 * sc, 2 * sc, 0);
+    //vertex(-3 * sc, -2 * sc, 0);
 
-    popStyle();
+    //vertex(3 * sc, 0, 0);
+    //vertex(-3 * sc, 2 * sc, 0);
+    //vertex(-3 * sc, 0, 2 * sc);
+
+    //vertex(3 * sc, 0, 0);
+    //vertex(-3 * sc, 0, 2 * sc);
+    //vertex(-3 * sc, -2 * sc, 0);
+
+    //vertex(-3 * sc, 0, 2 * sc);
+    //vertex(-3 * sc, 2 * sc, 0);
+    //vertex(-3 * sc, -2 * sc, 0);
+    //endShape();
+
+popStyle();
   }
 }
