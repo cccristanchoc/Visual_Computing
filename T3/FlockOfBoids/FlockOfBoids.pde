@@ -68,28 +68,23 @@ void draw() {
   walls();
   scene.traverse();
  
-  if(!Curvas.isEmpty())
-  {
+  if(!Curvas.isEmpty()){
     for(int i=0;i<Curvas.size()-1;i++){
-    line(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z() , Curvas.get(i+1).x(), Curvas.get(i+1).y(), Curvas.get(i+1).z()  );  
+      line(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z() , Curvas.get(i+1).x(), Curvas.get(i+1).y(), Curvas.get(i+1).z()  );
+    }
+    pushStyle(); 
+    strokeWeight(15); 
+    //stroke(0,255,0);
+    stroke(204,102,0);
+    
+    //scene.drawPath(interpolator); 
+    //DrawCurve(); 
+    
+    popStyle();
+    
   }
-
-  pushStyle();
-  strokeWeight(3);
-  stroke(255,0,0);
- 
-  //scene.drawPath(interpolator);
-  //DrawCurve();
-  
-  popStyle();
-
   // uncomment to asynchronously update boid avatar. See mouseClicked()
   // updateAvatar(scene.trackedFrame("mouseClicked"));
-}
-
-
-  
-
 }
 
 void cubicBezier(){
@@ -139,6 +134,64 @@ void cubicBezier(){
       PointsX.apply(BC);
       PointsY.apply(BC);
       PointsZ.apply(BC);      
+           
+      Curvas.add(new Vector(PointsX.m00(),PointsY.m00(),PointsZ.m00()));
+      //println(PointsX.m00(),PointsY.m00(),PointsZ.m00());
+  }
+  //println(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z());
+  //println("----------------------");
+  //Curvas.add(new Vector(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z()));
+}
+
+void cubicHermite(){
+  flockCurves.clear();
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  Curvas.clear();  
+  
+  Curvas.add(new Vector(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(), flockCurves.get(0).position.z()));
+  //println("----------------------");
+  //println(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(), flockCurves.get(0).position.z());  
+  //println(flockCurves.get(1).position.x(),flockCurves.get(1).position.y(),flockCurves.get(1).position.z());
+  //println(flockCurves.get(2).position.x(),flockCurves.get(2).position.y(), flockCurves.get(2).position.z());
+  //println(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z());  
+  //println("----------------------");
+ 
+  
+
+  for(float u =0;u<1;u+=0.1)
+  {
+    println("----- "+u);
+    Matrix DuBc= new Matrix(  u*u*u, u*u, u, 1, 
+                            0, 0 , 0, 0, 
+                            0, 0, 0, 0, 
+                            0, 0, 0, 0);
+     Matrix HM= new Matrix(  -1, 3, -3, 1, 
+                          3,  -6 , 3, 0, 
+                          -3, 3,  0, 0, 
+                          1,  0,  0, 0);                     
+      
+      HM.apply(DuBc);      
+    
+      Matrix PointsX =  new Matrix(  flockCurves.get(0).position.x(), 0, 0, 0, 
+                                     flockCurves.get(1).position.x(), 0, 0, 0, 
+                                     flockCurves.get(2).position.x(), 0, 0, 0, 
+                                     flockCurves.get(3).position.x(), 0, 0, 0);
+                                     
+      Matrix PointsY =  new Matrix(  flockCurves.get(0).position.y(), 0, 0, 0, 
+                                     flockCurves.get(1).position.y(), 0, 0, 0, 
+                                     flockCurves.get(2).position.y(), 0, 0, 0, 
+                                     flockCurves.get(3).position.y(), 0, 0, 0);
+                                     
+      Matrix PointsZ =  new Matrix(  flockCurves.get(0).position.z(), 0, 0, 0, 
+                                     flockCurves.get(1).position.z(), 0, 0, 0, 
+                                     flockCurves.get(2).position.z(), 0, 0, 0, 
+                                     flockCurves.get(3).position.z(), 0, 0, 0);  
+      PointsX.apply(HM);
+      PointsY.apply(HM);
+      PointsZ.apply(HM);      
            
       Curvas.add(new Vector(PointsX.m00(),PointsY.m00(),PointsZ.m00()));
       //println(PointsX.m00(),PointsY.m00(),PointsZ.m00());
@@ -267,6 +320,8 @@ void keyPressed() {
     //println(flock.get(index).position.x());
     break;
   case '-':
+    cubicHermite();
+    /*
     if(interpolator.keyFrames().isEmpty()){
       println(" ¡No hay puntos para eliminar! ");
       break;
@@ -277,7 +332,7 @@ void keyPressed() {
       interpolator.removeKeyFrame(0);
       println(interpolator.keyFrames());
     }
-    
+    */
     break;
   
   case ' ':
