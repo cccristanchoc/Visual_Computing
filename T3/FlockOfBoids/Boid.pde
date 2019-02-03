@@ -90,7 +90,7 @@ class Boid {
         if (animate)
           run(flock);
           //shape(boidPs);
-          //render();
+          render();
       }
     };
     frame.setPosition(new Vector(position.x(), position.y(), position.z()));
