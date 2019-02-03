@@ -43,6 +43,7 @@ ArrayList<Vector> Curvas=new ArrayList();
 
 Frame avatar;
 boolean animate = true;
+int controlPoints = 4;
 String CurveType="";
 
 void setup() {
@@ -66,26 +67,39 @@ void draw() {
   ambientLight(128, 128, 128);
   directionalLight(255, 255, 255, 0, 1, -100);
   walls();
-  scene.traverse();
- 
-
-    
+  scene.traverse();  
     pushStyle(); 
-    strokeWeight(15); 
+    strokeWeight(10); 
     //stroke(0,255,0);
     stroke(204,102,0);
     if(CurveType=="CB")
     {
-      cubicBezier();
+      if(controlPoints==4)
+      {
+        cubicBezier();
+      }
+      else
+      {
+        sevenBezier();
+        println("----- n puntos: "+Curvas.size() );
+      }
     }
     if(CurveType=="CH")
     {
       cubicHermite();
     }
     
-      if(!Curvas.isEmpty()){
-    for(int i=0;i<Curvas.size()-1;i++){
-      line(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z() , Curvas.get(i+1).x(), Curvas.get(i+1).y(), Curvas.get(i+1).z()  );
+      if(!Curvas.isEmpty()){        
+        for(int i=0;i<Curvas.size()-1;i++){
+          strokeWeight(10); 
+          line(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z() , Curvas.get(i+1).x(), Curvas.get(i+1).y(), Curvas.get(i+1).z()  );
+          if(i==1)
+          {
+            strokeWeight(20); 
+            point(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
+            println(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
+         }        
+       
     }
     //scene.drawPath(interpolator); 
     //DrawCurve(); 
@@ -108,26 +122,13 @@ void randomFlocks()
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
 }
 
 void cubicBezier(){
   Curvas.clear();
   println("CB");
   
-  Curvas.add(new Vector(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(), flockCurves.get(0).position.z()));
-  //println("----------------------");
-  //println(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(), flockCurves.get(0).position.z());  
-  //println(flockCurves.get(1).position.x(),flockCurves.get(1).position.y(),flockCurves.get(1).position.z());
-  //println(flockCurves.get(2).position.x(),flockCurves.get(2).position.y(), flockCurves.get(2).position.z());
-  //println(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z());  
-  //println("----------------------");
- 
-  
-
-  for(float u =0;u<1;u+=0.1)
+  for(float u =0;u<=1;u+=0.1)
   {
     //println("----- "+u);
     Matrix DuBc= new Matrix(  u*u*u, u*u, u, 1, 
@@ -170,15 +171,7 @@ void cubicBezier(){
 void cubicHermite(){
   println("CH");
   Curvas.clear();  
-  Curvas.add(new Vector(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(), flockCurves.get(0).position.z()));
-  //println("----------------------");
-  //println(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(), flockCurves.get(0).position.z());  
-  //println(flockCurves.get(1).position.x(),flockCurves.get(1).position.y(),flockCurves.get(1).position.z());
-  //println(flockCurves.get(2).position.x(),flockCurves.get(2).position.y(), flockCurves.get(2).position.z());
-  //println(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z());  
-  //println("----------------------");
-  
-  for(float u =0;u<1;u+=0.1)
+  for(float u =0;u<=1;u+=0.1)
   {
     //println("----- "+u);
     Matrix DuBc= new Matrix(  u*u*u, u*u, u, 1, 
@@ -216,6 +209,136 @@ void cubicHermite(){
   //println(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z());
   //println("----------------------");
   //Curvas.add(new Vector(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z()));
+}
+
+ public static float[][] multiplyMatrices(float[][] firstMatrix, float[][] secondMatrix, int r1, int c1, int c2) {
+        float[][] product = new float[r1][c2];
+        for(int i = 0; i < r1; i++) {
+            for (int j = 0; j < c2; j++) {
+                for (int k = 0; k < c1; k++) {
+                    product[i][j] += firstMatrix[i][k] * secondMatrix[k][j];
+                }
+            }
+        }
+        return product;
+    }
+
+public static void displayProduct(float[][] product) {
+        System.out.println("Product of two matrices is: ");
+        for(float[] row : product) {
+            for (float column : row) {
+                System.out.print(column + "    ");
+            }
+            System.out.println();
+        }
+    }
+    
+void sevenBezier(){
+  Curvas.clear();
+  
+  for(float u =0;u<=1;u+=0.1)
+  {
+    
+     float [][] du= { 
+                    {pow(u,7),pow(u,6),pow(u,5),pow(u,4),pow(u,3),pow(u,2),pow(u,1),pow(u,0)}, 
+                    {0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  }
+                };
+       float [][] bc= { 
+                    {  -1  ,     7  ,   -21  ,    35  ,   -35  ,   21  ,  -7  ,  1}, 
+                    {   7  ,   -42  ,   105  ,  -140  ,   105  ,  -42  ,  7 ,  0  },
+                    {  -21 ,   105  ,  -210  ,   210  ,  -105  ,   21  ,  0 ,  0  },
+                    {   35 ,   105  ,   105  ,    35  ,     0  ,    0  ,  0 ,  0  },
+                    {  -35 ,  -140  ,  -210  ,  -140  ,   -35  ,    0  ,  0 ,  0  },
+                    {   21 ,   105  ,   210  ,   210  ,   105  ,   21  ,  0 ,  0  },
+                    {  -7  ,     7  ,     0  ,     0  ,     0  ,    0  ,  0 ,  0  },
+                    {   1  ,     0  ,     0  ,     0  ,     0  ,    0  ,  0 ,  0  }
+                };               
+    
+         float[][] duBc = multiplyMatrices(du, bc, 8, 8, 8);
+        
+         
+         float [][] PointsX= { 
+                    {flockCurves.get(0).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  }, 
+                    {flockCurves.get(1).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(2).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(3).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(4).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(5).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(6).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(7).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  }
+         };    
+         
+         
+         float [][] PointsY= { 
+                    {flockCurves.get(0).position.y()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  }, 
+                    {flockCurves.get(1).position.y()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(2).position.y()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(3).position.y()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(4).position.y()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(5).position.y()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(6).position.y()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(7).position.y()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  }
+         };
+         float [][] PointsZ= { 
+                    {flockCurves.get(0).position.z()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  }, 
+                    {flockCurves.get(1).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(2).position.z()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(3).position.z()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(4).position.x()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(5).position.z()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(6).position.z()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  },
+                    {flockCurves.get(7).position.z()  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  }
+         };
+    
+      float[][] pX= multiplyMatrices(duBc, PointsX, 8, 8, 8);
+      println("---PPP---");      
+      float[][] pY= multiplyMatrices(duBc, PointsY, 8, 8, 8);
+      float[][] pZ= multiplyMatrices(duBc, PointsZ, 8, 8, 8);
+      /*displayProduct(pX);
+      displayProduct(pY);
+      displayProduct(pZ);*/
+      
+
+      if(pX[0][0]>=999)
+      {
+        if (pX[0][0]/1000 >=100)
+        {
+          pX[0][0]=pX[0][0]/1000;
+        }
+        else
+        {
+          pX[0][0]=pX[0][0]/100;
+        }
+      }
+      
+             if (pY[0][0]/1000 >=100)
+        {
+          pY[0][0]=pY[0][0]/1000;
+        }
+        else
+        {
+          pY[0][0]=pY[0][0]/100;
+        }
+             if (pZ[0][0]/1000 >=100)
+        {
+          pZ[0][0]=pZ[0][0]/1000;
+        }
+        else
+        {
+          pZ[0][0]=pZ[0][0]/100;
+        }
+      println(pX[0][0]);
+      println(pY[0][0]);
+      println(pZ[0][0]);
+      Curvas.add(new Vector(pX[0][0],pY[0][0],pZ[0][0]));      
+  }
+
 }
 
 void walls() {
@@ -331,6 +454,14 @@ void keyPressed() {
     CurveType = "CB";
     break;
     
+    case '7':    
+    controlPoints = 7;
+    break;   
+    
+    case '4':    
+    controlPoints = 4;
+    break;         
+        
    case 'h':
     randomFlocks();
     CurveType = "CH";
