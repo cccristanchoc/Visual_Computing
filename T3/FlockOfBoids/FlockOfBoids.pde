@@ -43,7 +43,7 @@ ArrayList<Vector> Curvas=new ArrayList();
 
 Frame avatar;
 boolean animate = true;
-
+String CurveType="";
 
 void setup() {
 
@@ -58,7 +58,7 @@ void setup() {
   for (int i = 0; i < initBoidNum; i++)
     flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2)));
   interpolator =  new Interpolator(scene);
-
+  randomFlocks();
 }
 
 void draw() {
@@ -68,15 +68,25 @@ void draw() {
   walls();
   scene.traverse();
  
-  if(!Curvas.isEmpty()){
-    for(int i=0;i<Curvas.size()-1;i++){
-      line(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z() , Curvas.get(i+1).x(), Curvas.get(i+1).y(), Curvas.get(i+1).z()  );
-    }
+
+    
     pushStyle(); 
     strokeWeight(15); 
     //stroke(0,255,0);
     stroke(204,102,0);
+    if(CurveType=="CB")
+    {
+      cubicBezier();
+    }
+    if(CurveType=="CH")
+    {
+      cubicHermite();
+    }
     
+      if(!Curvas.isEmpty()){
+    for(int i=0;i<Curvas.size()-1;i++){
+      line(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z() , Curvas.get(i+1).x(), Curvas.get(i+1).y(), Curvas.get(i+1).z()  );
+    }
     //scene.drawPath(interpolator); 
     //DrawCurve(); 
     
@@ -87,13 +97,25 @@ void draw() {
   // updateAvatar(scene.trackedFrame("mouseClicked"));
 }
 
-void cubicBezier(){
+void randomFlocks()
+{
   flockCurves.clear();
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  Curvas.clear();  
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+}
+
+void cubicBezier(){
+  Curvas.clear();
+  println("CB");
   
   Curvas.add(new Vector(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(), flockCurves.get(0).position.z()));
   //println("----------------------");
@@ -107,7 +129,7 @@ void cubicBezier(){
 
   for(float u =0;u<1;u+=0.1)
   {
-    println("----- "+u);
+    //println("----- "+u);
     Matrix DuBc= new Matrix(  u*u*u, u*u, u, 1, 
                             0, 0 , 0, 0, 
                             0, 0, 0, 0, 
@@ -143,14 +165,11 @@ void cubicBezier(){
   //Curvas.add(new Vector(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z()));
 }
 
+
+
 void cubicHermite(){
-  flockCurves.clear();
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  println("CH");
   Curvas.clear();  
-  
   Curvas.add(new Vector(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(), flockCurves.get(0).position.z()));
   //println("----------------------");
   //println(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(), flockCurves.get(0).position.z());  
@@ -158,12 +177,10 @@ void cubicHermite(){
   //println(flockCurves.get(2).position.x(),flockCurves.get(2).position.y(), flockCurves.get(2).position.z());
   //println(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z());  
   //println("----------------------");
- 
   
-
   for(float u =0;u<1;u+=0.1)
   {
-    println("----- "+u);
+    //println("----- "+u);
     Matrix DuBc= new Matrix(  u*u*u, u*u, u, 1, 
                             0, 0 , 0, 0, 
                             0, 0, 0, 0, 
@@ -308,9 +325,19 @@ void keyPressed() {
   case 'v':
     avoidWalls = !avoidWalls;
     break;
+    
+   case 'b':
+    randomFlocks();
+    CurveType = "CB";
+    break;
+    
+   case 'h':
+    randomFlocks();
+    CurveType = "CH";
+    break;
   
-  case '+':
-    cubicBezier();
+  case '+':    
+    randomFlocks();
     //int index = int(random(0,initBoidNum));
     //Boid boid=flock.get(index);
     //println(flock.get(index).frame);
