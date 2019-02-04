@@ -14,12 +14,14 @@ class Boid {
   float[] v1={-3 * sc, 2 * sc, 0};
   float[] v2={-3 * sc, -2 * sc, 0};
   float[] v3={-3 * sc, 0, 2 * sc};
-  
+   ArrayList<Integer[]> lfaces = new ArrayList<Integer[]>();
+  ArrayList<PVector> lvertex= new ArrayList<PVector>();  
   ArrayList<ArrayList<float[]>> vectorList = new ArrayList<ArrayList<float[]>>();
   ArrayList<float[]> vectors = new ArrayList<float[]>();
   ArrayList<float[]> v0list = new ArrayList<float[]>();
   ArrayList<float[]> v1list = new ArrayList<float[]>();
   ArrayList<float[]> v2list = new ArrayList<float[]>();
+  boolean representation=true;
   
     //vertex(v0[0],v0[1],v0[2]);      V0
     //vertex(-3 * sc, 2 * sc, 0);     V1
@@ -36,10 +38,9 @@ class Boid {
     //vertex(-3 * sc, 0, 2 * sc);     V3
     //vertex(-3 * sc, 2 * sc, 0);     V1
     //vertex(-3 * sc, -2 * sc, 0);    V2
-    
- Boid(Vector inPos) {
-    boidPs = createShape(); 
-   
+ 
+ void VertexVertex()
+ {
     vectors.add(v0);
     vectors.add(v1);
     vectors.add(v2);
@@ -53,6 +54,33 @@ class Boid {
     vectorList.add(v0list);
     vectorList.add(v1list);
     vectorList.add(v2list);
+ 
+ }
+ 
+ void FaceVertex()
+ {
+    lfaces.add(new Integer[]{0,1,2});
+    lfaces.add(new Integer[]{0,1,3});
+    lfaces.add(new Integer[]{0,3,2});
+    lfaces.add(new Integer[]{3,1,2});
+    lvertex.add(new PVector(3,0,0));
+    lvertex.add(new PVector(-3,2,0));
+    lvertex.add(new PVector(-3,-2,0));
+    lvertex.add(new PVector(-3,0,2));
+ }    
+    
+ Boid(Vector inPos, boolean mode, boolean rep) {
+    representation=rep;
+    
+    if(rep)
+    {
+      VertexVertex();
+    }
+    else
+    {FaceVertex();
+    }
+    
+    boidPs = createShape();   
     
     boidPs.beginShape(LINES);    
     boidPs.strokeWeight(2);
@@ -70,29 +98,52 @@ class Boid {
       boidPs.stroke(color(255, 0, 0));
       boidPs.fill(color(255, 0, 0));
     }
-      
+    if(representation){ // true for vertex  
       for(int i=0; i<vectors.size()-1;i++){
          for(int y=0; y<vectorList.get(i).size();y++){
            boidPs.vertex(vectors.get(i)[0],vectors.get(i)[1],vectors.get(i)[2]);
            boidPs.vertex(vectorList.get(i).get(y)[0],vectorList.get(i).get(y)[1],vectorList.get(i).get(y)[2]);
          }
       }
+    }
+    else{
+      for(int i=0; i<lfaces.size(); i++){
+          for(int j=0; j<=lfaces.get(i).length; j++){
+            PVector vertex = lvertex.get(lfaces.get(i)[j%3]);   
+            boidPs.vertex(vertex.x*sc,vertex.y*sc,vertex.z*sc);        
+          }
+      }  
+    }
     boidPs.endShape();
     
     position = new Vector();
     position.set(inPos);
-    frame = new Frame(scene) {
-      // Note that within visit() geometry is defined at the
-      // frame local coordinate system.
-      @Override
-      public void visit() 
-      {
-        if (animate)
-          run(flock);
-          //shape(boidPs);
-          render();
+    if(mode)
+    {
+        frame = new Frame(scene) {
+          // Note that within visit() geometry is defined at the
+          // frame local coordinate system.
+          @Override
+          public void visit() 
+          {
+            if (animate)
+              run(flock);
+              render();
+          }
+        };
       }
-    };
+      else
+      {
+           frame = new Frame(scene) {
+              @Override
+              public void visit() 
+              {
+                if (animate)
+                  run(flock);
+                  shape(boidPs);              
+              }
+           };
+      }
     frame.setPosition(new Vector(position.x(), position.y(), position.z()));
     velocity = new Vector(random(-1, 1), random(-1, 1), random(1, -1));
     acceleration = new Vector(0, 0, 0);
@@ -221,13 +272,24 @@ class Boid {
       stroke(color(255, 0, 0));
       fill(color(255, 0, 0));
     }
-      
+    if(representation)
+    {
       for(int i=0; i<vectors.size()-1;i++){
          for(int y=0; y<vectorList.get(i).size();y++){
            vertex(vectors.get(i)[0],vectors.get(i)[1],vectors.get(i)[2]);
            vertex(vectorList.get(i).get(y)[0],vectorList.get(i).get(y)[1],vectorList.get(i).get(y)[2]);
          }
       }
+    }
+    else
+    {      
+       for(int i=0; i<lfaces.size(); i++){
+          for(int j=0; j<=lfaces.get(i).length; j++){
+            PVector vertex = lvertex.get(lfaces.get(i)[j%3]);   
+            vertex(vertex.x*sc,vertex.y*sc,vertex.z*sc);        
+          }
+      } 
+    }
     endShape();
     // uncomment to draw boid axes
     //scene.drawAxes(10);

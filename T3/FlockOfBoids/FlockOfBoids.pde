@@ -40,7 +40,8 @@ int initBoidNum = 300; // amount of boids to start the program with
 ArrayList<Boid> flock;
 ArrayList<Boid> flockCurves=new ArrayList();
 ArrayList<Vector> Curvas=new ArrayList();
-
+boolean mode=true;
+boolean representation=true;
 Frame avatar;
 boolean animate = true;
 int controlPoints = 4;
@@ -55,10 +56,19 @@ void setup() {
   scene.setFieldOfView(PI / 3);
   scene.fitBall();
   // create and fill the list of boids
-  flock = new ArrayList();
+  //flock = new ArrayList();
+  //for (int i = 0; i < initBoidNum; i++)
+  //  flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2),mode));
+  //interpolator =  new Interpolator(scene);
+  //randomFlocks();
+}
+
+void resetflocks(){
+
+    flock = new ArrayList();
   for (int i = 0; i < initBoidNum; i++)
-    flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2)));
-  interpolator =  new Interpolator(scene);
+    flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2),mode,representation));
+  //interpolator =  new Interpolator(scene);
   randomFlocks();
 }
 
@@ -108,24 +118,24 @@ void draw() {
 
 void randomFlocks(){
   flockCurves.clear();
-  flockCurves.add(flock.get(0));  
-  flockCurves.add(flock.get(1));
-  flockCurves.add(flock.get(2));
-  flockCurves.add(flock.get(3));
-  flockCurves.add(flock.get(4));
-  flockCurves.add(flock.get(5));
-  flockCurves.add(flock.get(6));
-  flockCurves.add(flock.get(7));
+  //flockCurves.add(flock.get(0));  
+  //flockCurves.add(flock.get(1));
+  //flockCurves.add(flock.get(2));
+  //flockCurves.add(flock.get(3));
+  //flockCurves.add(flock.get(4));
+  //flockCurves.add(flock.get(5));
+  //flockCurves.add(flock.get(6));
+  //flockCurves.add(flock.get(7));
   
   
-/*flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));*/
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));
 }
 
 void cubicBezier(){
@@ -171,8 +181,6 @@ void cubicBezier(){
   //println("----------------------");
   //Curvas.add(new Vector(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(), flockCurves.get(3).position.z()));
 }
-
-
 
 void cubicHermite(){
   println("CH");
@@ -551,7 +559,7 @@ void keyPressed() {
   case 'p':
     println("Frame rate: " + frameRate);
     break;
-  case 'v':
+  case 'w':
     avoidWalls = !avoidWalls;
     break;
     
@@ -576,6 +584,14 @@ void keyPressed() {
    case 'h':
     randomFlocks();
     CurveType = "CH";
+    break;
+    
+    case 'v':
+    representation=true;
+    break;
+    
+    case 'f':
+    representation=false;
     break;
   
   case '+':    
@@ -609,6 +625,14 @@ void keyPressed() {
       resetEye();
     else if (avatar != null)
       thirdPerson();
+    break;
+  case 'r':
+    mode=false; 
+    resetflocks();
+    break;
+  case 'i':
+    mode=true;    
+    resetflocks();
     break;
   case '1':
     one = !one;
