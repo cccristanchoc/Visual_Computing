@@ -77,7 +77,8 @@ class Boid {
       VertexVertex();
     }
     else
-    {FaceVertex();
+    {
+      FaceVertex();
     }
     
     boidPs = createShape();   

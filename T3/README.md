@@ -20,8 +20,7 @@ Empleando el [FlockOfBoids](https://github.com/VisualComputing/frames/tree/maste
 
 ## Opcionales
 
-1. Represente los _boids_ mediante superficies de spline.
-2. Implemente las curvas cúbicas naturales.
+Se Implementaron las curvas cúbicas naturales.
 
 ## Integrantes
 
@@ -30,8 +29,8 @@ Uno, o máximo dos si van a realizar al menos un opcional.
 Complete la tabla:
 
 | Integrante | github nick |
-|------------|-------------|
-|            |             |
+| David Andres Hoyos R |	wolfstain |
+| Cristian Camilo Cristancho C  | cccristanchoc |
 
 ## Entrega
 
@@ -39,8 +38,8 @@ Complete la tabla:
 * Presentar el trabajo en la clase del 6/2/19 o 7/2/19.
 
 ## Indicaciones de uso
-
-* Oprimir la tecla 'f' para FaceToVertex o 'v' para VertexToVertex
-* Oprimir la tecla 'r' para modo retenido o 'i' para modo inmediato
-* Oprimir la tecla 'b' para mostrar cubica de bezier, 'n' para cubica natural o 'h' para cubica de hermite
-* oprimir la tecla '4' o '7' para indicar grado de bezier
+Pasos:
+1- Oprimir la tecla 'f' para FaceToVertex o 'v' para VertexToVertex
+2- Oprimir la tecla 'r' para modo retenido o 'i' para modo inmediato
+3 Oprimir la tecla 'b' para mostrar cubica de bezier, 'n' para cubica natural o 'h' para cubica de hermite
+* oprimir la tecla '4' o '7' para cambiar los grados de la curva de bezier

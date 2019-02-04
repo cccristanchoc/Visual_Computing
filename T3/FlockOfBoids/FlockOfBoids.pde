@@ -91,7 +91,8 @@ void draw() {
       }
       else
       {
-        sevenBezier();
+        bez7();
+        //sevenBezier();
         //println("----- n puntos: "+Curvas.size() );
       }
     }
@@ -118,24 +119,23 @@ void draw() {
 
 void randomFlocks(){
   flockCurves.clear();
-  //flockCurves.add(flock.get(0));  
-  //flockCurves.add(flock.get(1));
-  //flockCurves.add(flock.get(2));
-  //flockCurves.add(flock.get(3));
-  //flockCurves.add(flock.get(4));
-  //flockCurves.add(flock.get(5));
-  //flockCurves.add(flock.get(6));
-  //flockCurves.add(flock.get(7));
+  flockCurves.add(flock.get(0));  
+  flockCurves.add(flock.get(1));
+  flockCurves.add(flock.get(2));
+  flockCurves.add(flock.get(3));
+  flockCurves.add(flock.get(4));
+  flockCurves.add(flock.get(5));
+  flockCurves.add(flock.get(6));
+  flockCurves.add(flock.get(7));  
   
-  
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  //flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  //flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  //flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  //flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  //flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  //flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  //flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  //flockCurves.add(flock.get(int(random(0,initBoidNum))));
 }
 
 void cubicBezier(){
@@ -247,7 +247,7 @@ public static void displayProduct(float[][] product) {
             System.out.println();
         }
     }
-    
+ 
 void sevenBezier(){
   Curvas.clear();
   
@@ -354,6 +354,40 @@ void sevenBezier(){
       Curvas.add(new Vector(pX[0][0],pY[0][0],pZ[0][0]));      
   }
 
+}
+
+void bez7(){
+  Curvas.clear();
+  //println("CB");
+  
+  for(float t =0;t<=1;t+=0.1){
+      PVector P1= new PVector(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(),flockCurves.get(0).position.z());
+      PVector P2= new PVector(flockCurves.get(1).position.x(),flockCurves.get(1).position.y(),flockCurves.get(1).position.z());
+      PVector P3= new PVector(flockCurves.get(2).position.x(),flockCurves.get(2).position.y(),flockCurves.get(2).position.z());
+      PVector P4= new PVector(flockCurves.get(3).position.x(),flockCurves.get(3).position.y(),flockCurves.get(3).position.z());
+      PVector P5= new PVector(flockCurves.get(4).position.x(),flockCurves.get(4).position.y(),flockCurves.get(4).position.z());
+      PVector P6= new PVector(flockCurves.get(5).position.x(),flockCurves.get(5).position.y(),flockCurves.get(5).position.z());
+      PVector P7= new PVector(flockCurves.get(6).position.x(),flockCurves.get(6).position.y(),flockCurves.get(6).position.z());
+      PVector P8= new PVector(flockCurves.get(7).position.x(),flockCurves.get(7).position.y(),flockCurves.get(7).position.z());
+
+      // compute first tree points along main segments P1-P2, P2-P3 and P3-P4
+      PVector P12 = (P1.mult(1-t)).add(P2.mult(t)); 
+      PVector P23 = (P2.mult(1-t)).add(P3.mult(t)); 
+      PVector P34 = (P3.mult(1-t)).add(P4.mult(t));    
+       
+      PVector P56 = (P5.mult(1-t)).add(P6.mult(t));
+      PVector P67 = (P6.mult(1-t)).add(P7.mult(t));
+      PVector P78 = (P7.mult(1-t)).add(P8.mult(t));
+      // compute two points along segments P1P2-P2P3 and P2P3-P3P4
+      PVector P1223 = (P12.mult(1-t)).add(P23.mult(t));       
+      PVector P2334 = (P23.mult(1-t)).add(P34.mult(t));   
+      PVector P5667 = (P56.mult(1-t)).add(P67.mult(t)); 
+      PVector P6778 = (P67.mult(1-t)).add(P78.mult(t)); 
+   
+      // finally compute P
+      PVector res= P1223.mult(pow(1-t,3)).add(P2334.mult(pow(1-t,2)*t).add(P5667.mult(pow(t,2)*(1-t)).add(P6778.mult(pow(t,3)))));
+      Curvas.add(new Vector(res.x,res.y,res.z));     
+  }
 }
 
 void SplineCubicaNatural ()
