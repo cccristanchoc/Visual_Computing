@@ -40,7 +40,7 @@ Complete la tabla:
 
 ## Indicaciones de uso
 Pasos:
-1- Oprimir la tecla 'f' para FaceToVertex o 'v' para VertexToVertex
-2- Oprimir la tecla 'r' para modo retenido o 'i' para modo inmediato
-3 Oprimir la tecla 'b' para mostrar cubica de bezier, 'n' para cubica natural o 'h' para cubica de hermite
+* 1- Oprimir la tecla 'f' para FaceToVertex o 'v' para VertexToVertex
+* 2- Oprimir la tecla 'r' para modo retenido o 'i' para modo inmediato
+* 3 Oprimir la tecla 'b' para mostrar cubica de bezier, 'n' para cubica natural o 'h' para cubica de hermite
 * oprimir la tecla '4' o '7' para cambiar los grados de la curva de bezier
