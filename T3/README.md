@@ -29,6 +29,7 @@ Uno, o máximo dos si van a realizar al menos un opcional.
 Complete la tabla:
 
 | Integrante | github nick |
+|------------|-------------|
 | David Andres Hoyos R |	wolfstain |
 | Cristian Camilo Cristancho C  | cccristanchoc |
 
