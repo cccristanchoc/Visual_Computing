@@ -95,34 +95,13 @@ void draw() {
       SplineCubicaNatural();
     }
     
-<<<<<<< HEAD
       if(!Curvas.isEmpty()){        
         for(int i=0;i<Curvas.size()-1;i++){
           strokeWeight(10); 
-          line(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z() , Curvas.get(i+1).x(), Curvas.get(i+1).y(), Curvas.get(i+1).z()  );
-          if(i==1)
-          {
-            strokeWeight(20); 
-            //point(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
-            //println(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
-         }        
+          line(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z() , Curvas.get(i+1).x(), Curvas.get(i+1).y(), Curvas.get(i+1).z());
+        }}
        
-=======
-    if(!Curvas.isEmpty()){
-      for(int i=0;i<Curvas.size()-1;i++){
-        strokeWeight(10);
-        line(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z() , Curvas.get(i+1).x(), Curvas.get(i+1).y(), Curvas.get(i+1).z()); 
-        if(i==1){
-          strokeWeight(20);
-          point(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
-          println(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
-        } 
-      }
-      //scene.drawPath(interpolator); 
-      //DrawCurve(); 
-      popStyle();
->>>>>>> 398d1292240d5372c4fbaba95e8392f9e0217519
-    }
+
   // uncomment to asynchronously update boid avatar. See mouseClicked()
   // updateAvatar(scene.trackedFrame("mouseClicked"));
 }
