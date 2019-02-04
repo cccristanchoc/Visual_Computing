@@ -81,12 +81,16 @@ void draw() {
       else
       {
         sevenBezier();
-        println("----- n puntos: "+Curvas.size() );
+        //println("----- n puntos: "+Curvas.size() );
       }
     }
     if(CurveType=="CH")
     {
       cubicHermite();
+    }
+     if(CurveType=="N")
+    {
+      SplineCubicaNatural();
     }
     
       if(!Curvas.isEmpty()){        
@@ -96,8 +100,8 @@ void draw() {
           if(i==1)
           {
             strokeWeight(20); 
-            point(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
-            println(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
+            //point(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
+            //println(Curvas.get(i).x(), Curvas.get(i).y(), Curvas.get(i).z());
          }        
        
     }
@@ -114,19 +118,29 @@ void draw() {
 void randomFlocks()
 {
   flockCurves.clear();
+  flockCurves.add(flock.get(0));  
+  flockCurves.add(flock.get(1));
+  flockCurves.add(flock.get(2));
+  flockCurves.add(flock.get(3));
+  flockCurves.add(flock.get(4));
+  flockCurves.add(flock.get(5));
+  flockCurves.add(flock.get(6));
+  flockCurves.add(flock.get(7));
+  
+  
+/*flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
   flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
-  flockCurves.add(flock.get(int(random(0,initBoidNum))));
+  flockCurves.add(flock.get(int(random(0,initBoidNum))));*/
 }
 
 void cubicBezier(){
   Curvas.clear();
-  println("CB");
+  //println("CB");
   
   for(float u =0;u<=1;u+=0.1)
   {
@@ -175,13 +189,14 @@ void cubicHermite(){
   {
     //println("----- "+u);
     Matrix DuBc= new Matrix(  u*u*u, u*u, u, 1, 
-                            0, 0 , 0, 0, 
-                            0, 0, 0, 0, 
-                            0, 0, 0, 0);
-     Matrix HM= new Matrix(  -1, 3, -3, 1, 
-                          3,  -6 , 3, 0, 
-                          -3, 3,  0, 0, 
-                          1,  0,  0, 0);                     
+                              0, 0, 0, 0, 
+                              0, 0, 0, 0, 
+                              0, 0, 0, 0 );
+                            
+     Matrix HM= new Matrix(  2,-2, 1, 1, 
+                            -3, 3,-2,-1, 
+                             0, 0, 1, 0, 
+                             1, 0, 0, 0 );                     
       
       HM.apply(DuBc);      
     
@@ -236,7 +251,7 @@ public static void displayProduct(float[][] product) {
 void sevenBezier(){
   Curvas.clear();
   
-  for(float u =0;u<=1;u+=0.1)
+  for(float u =0;u<=1;u+=0.5)
   {
     
      float [][] du= { 
@@ -297,7 +312,7 @@ void sevenBezier(){
          };
     
       float[][] pX= multiplyMatrices(duBc, PointsX, 8, 8, 8);
-      println("---PPP---");      
+      //println("---PPP---");      
       float[][] pY= multiplyMatrices(duBc, PointsY, 8, 8, 8);
       float[][] pZ= multiplyMatrices(duBc, PointsZ, 8, 8, 8);
       /*displayProduct(pX);
@@ -333,13 +348,112 @@ void sevenBezier(){
         {
           pZ[0][0]=pZ[0][0]/100;
         }
-      println(pX[0][0]);
-      println(pY[0][0]);
-      println(pZ[0][0]);
+      //println(pX[0][0]);
+      //println(pY[0][0]);
+      //println(pZ[0][0]);
       Curvas.add(new Vector(pX[0][0],pY[0][0],pZ[0][0]));      
   }
 
 }
+
+void SplineCubicaNatural ()
+{
+  Curvas.clear();
+  int n=4;
+    int MAX_PTOS=20;
+    int i, j, m, xp, yp , zp;
+    double [] ax = new double [MAX_PTOS], bx= new double [MAX_PTOS], 
+    cx = new double [MAX_PTOS], dx = new double [MAX_PTOS], ay = new double [MAX_PTOS], 
+    by = new double [MAX_PTOS], cy = new double [MAX_PTOS], az= new double [MAX_PTOS],
+    bz= new double [MAX_PTOS], cz= new double [MAX_PTOS], dy= new double [MAX_PTOS], 
+    dz= new double [MAX_PTOS], der= new double [MAX_PTOS], gam= new double [MAX_PTOS], ome = new double [MAX_PTOS];    
+    double t, dt;
+    m = n-1; /* m es el numero de intervalos que tendremos */
+    /* Calculamos el valor de gamma (sera el mismo en X y en Y) */
+    gam[0] = .5;
+    for (i=1; i<m; i++) 
+    {
+      gam[i] = 1./(4.-gam[i-1]);
+    }
+    gam[m] = 1./(2.-gam[m-1]);
+    
+    
+    /* Calculamos el valor de omega para X */
+    ome[0] = 3.*(flockCurves.get(1).position.x()-flockCurves.get(0).position.x())*gam[0];
+    for (i=1; i<m; i++) 
+    {
+      ome[i] = (3.*(flockCurves.get(i+1).position.x()-flockCurves.get(i-1).position.x())-ome[i-1])*gam[i];
+    }
+    ome[m] = (3.*(flockCurves.get(m).position.x()-flockCurves.get(m-1).position.x())-ome[m-1])*gam[m];
+    /* Valor de la primera derivada en los puntos (eje X) */
+    der[m]=ome[m];
+    for (i=m-1; i>=0; i=i-1) 
+    {
+      der[i] = ome[i]-gam[i]*der[i+1];
+    }
+    /* Sustituimos los valores de gamma, omega y la primera derivada
+    para calcular los coeficientes a, b, c y d */
+    for (i=0; i<m; i++) {
+      ax[i] = flockCurves.get(i).position.x();
+      bx[i] = der[i];
+      cx[i] = 3.*(flockCurves.get(i+1).position.x()-flockCurves.get(i).position.x())-2.*der[i]-der[i+1];
+      dx[i] = 2.*(flockCurves.get(i).position.x()-flockCurves.get(i+1).position.x())+der[i]+der[i+1];
+    }
+    
+/* Calculamos omega para el eje Y */
+    ome[0] = 3.*(flockCurves.get(1).position.y()-flockCurves.get(0).position.y())*gam[0];
+    for (i=1; i<m; i++) {
+      ome[i] = (3.*(flockCurves.get(i+1).position.y()-flockCurves.get(i-1).position.y())-ome[i-1])*gam[i];
+    }
+    ome[m] = (3.*(flockCurves.get(m).position.y()-flockCurves.get(m-1).position.y())-ome[m-1])*gam[m];
+ /* Hallamos el valor de la primera derivada... */
+    der[m]=ome[m];
+    for (i=m-1; i>=0; i=i-1) 
+    {der[i] = ome[i]-gam[i]*der[i+1];}
+/* Valor de los coeficientes a, b, c y d en el eje Y */
+    for (i=0; i<m; i++) {
+    ay[i] = flockCurves.get(i).position.y();
+    by[i] = der[i];
+    cy[i] = 3.*(flockCurves.get(i+1).position.y()-flockCurves.get(i).position.y())-2.*der[i]-der[i+1];
+    dy[i] = 2.*(flockCurves.get(i).position.y()-flockCurves.get(i+1).position.y())+der[i]+der[i+1];
+    }
+    
+/* Calculamos omega para el eje Z */
+    ome[0] = 3.*(flockCurves.get(1).position.z()-flockCurves.get(0).position.z())*gam[0];
+    for (i=1; i<m; i++) {
+      ome[i] = (3.*(flockCurves.get(i+1).position.z()-flockCurves.get(i-1).position.z())-ome[i-1])*gam[i];
+    }
+    ome[m] = (3.*(flockCurves.get(m).position.z()-flockCurves.get(m-1).position.z())-ome[m-1])*gam[m];
+ /* Hallamos el valor de la primera derivada... */
+    der[m]=ome[m];
+    for (i=m-1; i>=0; i=i-1) 
+    {der[i] = ome[i]-gam[i]*der[i+1];}
+/* Valor de los coeficientes a, b, c y d en el eje Y */
+    for (i=0; i<m; i++) {
+      az[i] = flockCurves.get(i).position.z();
+      bz[i] = der[i];
+      cz[i] = 3.*(flockCurves.get(i+1).position.z()-flockCurves.get(i).position.z())-2.*der[i]-der[i+1];
+      dz[i] = 2.*(flockCurves.get(i).position.z()-flockCurves.get(i+1).position.z())+der[i]+der[i+1];
+    }   
+    
+/* En esta parte, se dibujara la curva por segmentos de lineas
+rectas; si NUM_SEG es un valor alto, la grafica se dibujara
+con mayor precision. */
+    int NUM_SEG=20;
+    dt = 1./(double) NUM_SEG;
+    Curvas.add(new Vector(flockCurves.get(0).position.x(),flockCurves.get(0).position.y(),flockCurves.get(0).position.z()));  
+    //moveto((int) x[0], (int) y[0]);
+    for (i=0; i<m; i++) {
+      for (j=1, t=dt; j<NUM_SEG; j++, t+=dt) {
+        xp = (int) (ax[i]+bx[i]*t+cx[i]*t*t+dx[i]*t*t*t);
+        yp = (int) (ay[i]+by[i]*t+cy[i]*t*t+dy[i]*t*t*t);
+        zp = (int) (az[i]+bz[i]*t+cz[i]*t*t+dz[i]*t*t*t);
+        Curvas.add(new Vector(xp,yp,zp));
+        //lineto (xp, yp);
+}
+}
+}
+
 
 void walls() {
   pushStyle();
@@ -460,7 +574,12 @@ void keyPressed() {
     
     case '4':    
     controlPoints = 4;
-    break;         
+    break;
+    
+    case 'n':
+    randomFlocks();
+    CurveType = "N";
+    break;
         
    case 'h':
     randomFlocks();
